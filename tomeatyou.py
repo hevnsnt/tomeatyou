@@ -68,10 +68,10 @@ infile = '/root/tomeatyou/search-text.txt'
 
 
 #-------------------Need to init your twitter oauth----------------------------------
-consumer_key='bw42b0kSIojsfrvhrpeew'
-consumer_secret='6uU87zRdPhDlj7kCNISMHVZAsRtgHrk9xr5pkfRmA58'
-access_token_key='1026881880-NRFJhKKwBxxnTqJYhgVjBOF0iCM2IywVhEvwaAaa'
-access_token_secret='aiBk4ijeH7L7kcJEGLRhbm-SSkS1qRRYXj0qLinSc'
+consumer_key='bw42b0kSIojsfrvhrpeew' # Replace with yours, this is just gibberish 
+consumer_secret='6uU87zRdPhDlj7kCNISMHVZAsRtgHrk9xr5pkfRmA58' # Replace with yours, this is just gibberish 
+access_token_key='1026881880-NRFJhKKwBxxnTqJYhgVjBOF0iCM2IywVhEvwaAaa' # Replace with yours, this is just gibberish 
+access_token_secret='aiBk4ijeH7L7kcJEGLRhbm-SSkS1qRRYXj0qLinSc' # Replace with yours, this is just gibberish 
 twitter = Twython(consumer_key, consumer_secret, access_token_key, access_token_secret)  # This authorize our bot, and will be our interface into the Twython functions
 #-------------------Need to init your twitter oauth----------------------------------
 
