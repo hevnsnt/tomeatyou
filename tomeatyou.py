@@ -1,17 +1,24 @@
-#import required modules:
+#!/usr/local/bin/python
+#-------------------imports----------------------------------------
 from twython import Twython
 import time
 import random
 import argparse
+#-------------------imports----------------------------------------
 
+#-------------------Functions----------------------------------------
 def writelog(message):
-	if verbose:print(message)
-	output = open(logfile, 'a')
-	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore'))
-	output.write(logstring)
-	output.close
+	'''This function writes to a logfile, and if verbose is true, it will also print
+	the message to the screen'''
+	if verbose:print(message) # Check to see if we are in verbose mode, if so, print the message to the screen
+	output = open(logfile, 'a') # Open the logfile for writing in append mode (so we dont overwrite previous log entries)
+	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore')) # Get the time (in HH:MM:SS MM/DD/YY CDT format), and convert the message to straight ASCII (as twitter msgs can contain unicode chars)
+	output.write(logstring) # Write the string to the file 
+	output.close # Close the file
 
 def twmeatit(tweet):
+	'''This function does the tweeting.  First it checks to make sure that the message isn't over 140
+	chars, then checks to see if we are in Test Mode, and if passed both will tweet'''
 	if len(tweet) <= 140:
 		try:
 			writelog("Getting ready to tweet: %s" % tweet)
@@ -51,6 +58,7 @@ def readfile(infile): # This is step one:
 	data = filter(bool, [line.strip() for line in open(infile, 'r')]) # This reads the file in line by line into a list, stripping blank lines
 	randInt = random.randrange(0, len(data),1) # This gets a random integer that ranges from 0 to the number of lines in the text
 	return data[randInt] # Returns the search text that we are going to search for
+#-------------------Functions----------------------------------------
 
 #-------------------Get command line input----------------------------------
 parser = argparse.ArgumentParser(description='Silly bot that likes to meat people', formatter_class=argparse.RawTextHelpFormatter)
