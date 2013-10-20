@@ -15,9 +15,11 @@ def postsPast(message):
 		writelog("Duplicate message found, restarting search") # Log write
 		return True # Return that it was true that we found a match
 	else:
-		pastpostsWriter = open(pastposts, 'a')
-		pastpostsWriter.write(message.encode('ascii', 'ignore'))
-		pastpostsWriter.close()
+		writelog("Message not found, writing to %s and continuing" % pastposts) # Log write
+		if not testMode:
+			pastpostsWriter = open(pastposts, 'a')
+			pastpostsWriter.write(message.encode('ascii', 'ignore') + "\n")
+			pastpostsWriter.close()
 		return False
 
 def writelog(message):
