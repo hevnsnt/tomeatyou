@@ -4,6 +4,7 @@ from twython import Twython # Needed for twitter
 import time # Needed for log writes
 import random # Needed to choose random number
 import argparse # Needed to parse commandline arguments
+import config # Needed for configuration variables (config.py)
 #-------------------imports----------------------------------------
 
 #-------------------Functions----------------------------------------
@@ -74,16 +75,17 @@ parser.add_argument('-t', action='store_true', dest='testMode', help='Test mode 
 results = parser.parse_args() # Parse the command line arguements and save to variable 'results'
 testMode = results.testMode # if the user sent -t, testMode will be True (otherwise false)
 verbose = results.verboseMode # if the user sent -v, verbose will be True (otherwise false)
-logfile = '/root/tomeatyou/logfile.log' # Define the location of the logfile
-infile = '/root/tomeatyou/search-text.txt' # Define the location of the search text in-file
+logfile = config.LOGFILE # Get logfile file location from config file
+infile = config.INFILE # Get search text file location from config file
+postsPast = config.POSTSPAST # Get postsPasts file location from config file
 #-------------------Init global vars----------------------------------
 
 
 #-------------------Need to init your twitter oauth----------------------------------
-consumer_key='bw42b0kSIojsfrvhrpeew' # Replace with yours, this is just gibberish 
-consumer_secret='6uU87zRdPhDlj7kCNISMHVZAsRtgHrk9xr5pkfRmA58' # Replace with yours, this is just gibberish 
-access_token_key='1026881880-NRFJhKKwBxxnTqJYhgVjBOF0iCM2IywVhEvwaAaa' # Replace with yours, this is just gibberish 
-access_token_secret='aiBk4ijeH7L7kcJEGLRhbm-SSkS1qRRYXj0qLinSc' # Replace with yours, this is just gibberish 
+consumer_key = config.CONSUMER_KEY # Get Consumer Key from config file 
+consumer_secret = config.CONSUMER_SECRET # Get Consumer Secret from config file 
+access_token_key = config.ACCESS_TOKEN_KEY # Get Access Token Key from config file 
+access_token_secret = config.ACCESS_TOKEN_SECRET # Get Access Token Secret from config file 
 twitter = Twython(consumer_key, consumer_secret, access_token_key, access_token_secret)  # This authorize our bot, and will be our interface into the Twython functions
 #-------------------Need to init your twitter oauth----------------------------------
 
