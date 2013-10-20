@@ -8,6 +8,18 @@ import config # Needed for configuration variables (config.py)
 #-------------------imports----------------------------------------
 
 #-------------------Functions----------------------------------------
+def postsPast(message):
+	writelog("Checking to see if we have previously posted this particular message")
+	pastMessages = filter(bool, [line.strip() for line in open(pastposts, 'r')]) # This reads the file in line by line into a list, stripping blank lines
+	if message in pastMessages: # If we have previously posted that text
+		writelog("Duplicate message found, restarting search") # Log write
+		return True # Return that it was true that we found a match
+	else:
+		pastpostsWriter = open(pastposts, 'a')
+		pastpostsWriter.write(message.encode('ascii', 'ignore'))
+		pastpostsWriter.close()
+		return False
+
 def writelog(message):
 	'''This function writes to a logfile, and if verbose is true, it will also print
 	the message to the screen'''
@@ -49,8 +61,11 @@ def meatme(statusMsg):
 	if "meet" in statusMsgText:
 		writelog('Replacing meet with meat in text: %s' % statusMsgText) # Log write
 		statusMsgText = statusMsgText.replace('meet', 'meat') # Replace 'meet' with 'meat' in the tweet text (will cover meeting, etc)
-	tweet = "RT @%s: %s" % (user, statusMsgText) # Setup our complete tweet string
-	twmeatit(tweet) # Send tweet string to twmeatit function for tweeting
+	if postsPast(statusMsgText) == False:
+		tweet = "RT @%s: %s" % (user, statusMsgText) # Setup our complete tweet string
+		twmeatit(tweet) # Send tweet string to twmeatit function for tweeting
+	else:
+		meatmentions(readfile(infile)) # Since we have previously posted this; Restart the entire process and choose a completely new tweet
 
 def meatmentions(searchText):
 	'''This function will search twitter for our search text, and pass the dictionary results to meatme (text processing function)'''
@@ -77,7 +92,7 @@ testMode = results.testMode # if the user sent -t, testMode will be True (otherw
 verbose = results.verboseMode # if the user sent -v, verbose will be True (otherwise false)
 logfile = config.LOGFILE # Get logfile file location from config file
 infile = config.INFILE # Get search text file location from config file
-postsPast = config.POSTSPAST # Get postsPasts file location from config file
+pastposts = config.POSTSPAST # Get postsPast file location from config file
 #-------------------Init global vars----------------------------------
 
 
