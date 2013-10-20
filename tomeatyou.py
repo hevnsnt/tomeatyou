@@ -12,25 +12,26 @@ def writelog(message):
 	the message to the screen'''
 	if verbose:print(message) # Check to see if we are in verbose mode, if so, print the message to the screen
 	output = open(logfile, 'a') # Open the logfile for writing in append mode (so we dont overwrite previous log entries)
-	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore')) # Get the time (in HH:MM:SS MM/DD/YY CDT format), and convert the message to straight ASCII (as twitter msgs can contain unicode chars)
+	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore')) # Get the time (in HH:MM:SS MM/DD/YY CDT format), 
+	# and convert the message to straight ASCII (as twitter msgs can contain unicode chars)
 	output.write(logstring) # Write the string to the file 
 	output.close # Close the file
 
 def twmeatit(tweet):
 	'''This function does the tweeting.  First it checks to make sure that the message isn't over 140
 	chars, then checks to see if we are in Test Mode, and if passed both will tweet'''
-	if len(tweet) <= 140:
+	if len(tweet) <= 140: # Make sure the full text we intend to tweet is less than 140 chars (including the RT: + Username + Message)
 		try:
-			writelog("Getting ready to tweet: %s" % tweet)
-			if not testMode:twitter.update_status(status=tweet)
-			writelog('Tweet was successful')
-		except Exception, e:
-			writelog('Something went wrong with tweet, error %s' % e)
-			writelog('Choosing another tweet')
-			meatmentions(readfile(infile))
+			writelog("Getting ready to tweet: %s" % tweet) # Write to the logfile
+			if not testMode:twitter.update_status(status=tweet) # Check to see if we are in test mode, and if not send the tweet
+			writelog('Tweet was successful') # We know it was successful, because if there was an error, it would have been caught below
+		except Exception, e: # If we fail sending to twitter for any reason, catch the exception here, store error message in variable 'e'
+			writelog('Something went wrong with tweet, error %s' % e) # Write to the log with the error message
+			writelog('Choosing another tweet') # Log write
+			meatmentions(readfile(infile)) # Since something went wrong; Restart the entire process and choose a completely new tweet
 	else:
-		writelog('Chosen tweet was > 140 Chars, choosing another one...')
-		meatmentions(readfile(infile))
+		writelog('Chosen tweet was > 140 Chars, choosing another one...') # Log write
+		meatmentions(readfile(infile)) # Since the message was over 140 chars, restart the entire process and choose a completely new tweet
 
 def meatme(statusMsg):
 	writelog('Choosing Random Twitter String')
