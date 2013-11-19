@@ -20,7 +20,6 @@ def getCheatmode():
 
 
 def cheatMode(searchList, statusMsg):
-	writelog('Cheater!') # Log write
 	user = ""
 	statusMsgText = ""
 	highest = 0
@@ -98,8 +97,10 @@ def meatmentions(searchList):
 	'''This function will search twitter for our search text, and pass the dictionary results to meatme (text processing function)'''
 	writelog('Getting Twitter Search Results') # Log write
 	if getCheatmode():
+		writelog('MeatCheat Enabled!') # Log write
 		cheatMode(searchList, twitter.search(q='"' + searchList[0] + '"', count=config.RESULT_COUNT))
 	else:
+		writelog('MeatCheat Disabled!') # Log write
 		randomStatus(searchList, twitter.search(q='"' + searchList[0] + '"', count=config.RESULT_COUNT)) # This searches twitter for the first term in our list (should be search text) wrapped in ""'s. Returns a dictionary of results, then passes that dict to meatme funct
 
 def readfile(infile):
