@@ -9,6 +9,30 @@ from os import system, name # Needed to clear the screen for any OS
 #-------------------imports----------------------------------------
 
 #-------------------Functions----------------------------------------
+def getCheatmode():
+	if config.CHEATMODE == "random":
+		cheats = random.choice([True, False]) # Randomly return True or False
+	elif config.CHEATMODE == "enabled":
+		cheats = True
+	else:
+		cheats = False
+	return cheats
+
+
+def cheatMode(searchList, statusMsg):
+	writelog('Cheater!') # Log write
+	user = ""
+	statusMsgText = ""
+	highest = 0
+	for status in statusMsg['statuses']:
+		if int(status['user']['followers_count']) > int(highest):
+			user = status['user']['screen_name']
+			highest = int(status['user']['followers_count'])
+			statusMsgText = status['text']
+	writelog("%s with %s followers was the most popular and said: %s" % (user, highest, statusMsgText))
+	meatme(searchList, statusMsgText, user)
+
+
 def postsPast(message):
 	writelog("Checking to see if we have previously posted this particular message")
 	pastMessages = filter(bool, [line.strip() for line in open(pastposts, 'r')]) # This reads the file in line by line into a list, stripping blank lines
@@ -28,9 +52,9 @@ def writelog(message):
 	the message to the screen'''
 	if verbose:print(message) # Check to see if we are in verbose mode, if so, print the message to the screen
 	output = open(logfile, 'a') # Open the logfile for writing in append mode (so we dont overwrite previous log entries)
-	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore')) # Get the time (in HH:MM:SS MM/DD/YY CDT format), 
+	logstring = "%s,%s\n" % (str(time.strftime('%X %x %Z')), message.encode('ascii', 'ignore')) # Get the time (in HH:MM:SS MM/DD/YY CDT format),
 	# and convert the message to straight ASCII (as twitter msgs can contain unicode chars)
-	output.write(logstring) # Write the string to the file 
+	output.write(logstring) # Write the string to the file
 	output.close # Close the file
 
 def twmeatit(tweet):
@@ -46,12 +70,15 @@ def twmeatit(tweet):
 	else:
 		raise NameError('Chosen tweet was > 140 Chars, choosing another one...') # Throw error, Log write, & restart
 
-def meatme(searchList, statusMsg): #SearchList is a list (['the meeting', 'meeting', 'meating']), and statusMsg is the twitter results dictionary
+def randomStatus(searchList, statusMsg): #SearchList is a list (['the meeting', 'meeting', 'meating']), and statusMsg is the twitter results dictionary
 	''' Expects the searchList and a dictionary containing Twitter search results, then chooses a random one, and changes it'''
 	writelog('Choosing Random Twitter String') # Log write
 	randTwitterInt = random.randrange(0, int(statusMsg['search_metadata']['count']),1) # Get the number of results in the dictionary (count), and then chooses a random number from 0-that.
 	statusMsgText = statusMsg['statuses'][randTwitterInt]['text'] # Choose the random text we are going to edit
 	user = statusMsg['statuses'][randTwitterInt]['user']['screen_name'] # Get ther username of the random text
+	meatme(searchList, statusMsgText, user)
+
+def meatme(searchList, statusMsgText, user): # StatusMsgText is the chosen status text, and user is the one who said it
 	if postsPast(statusMsgText) == False:
 		if searchList[1] not in statusMsgText and "meet" not in statusMsgText: # As twitter search is case in-sensitve, this is a bug fix to handle the case bug (MEET != meet)
 			raise NameError('Search terms not found in: %s, Choosing another: ' % statusMsgText) # Throw error, Log write, & restart
@@ -61,7 +88,7 @@ def meatme(searchList, statusMsg): #SearchList is a list (['the meeting', 'meeti
 		if "meet" in statusMsgText:
 			writelog('Replacing meet with meat in text: %s' % statusMsgText) # Log write
 			statusMsgText = statusMsgText.replace('meet', '"meat"') # Replace 'meet' with 'meat' in the tweet text (will cover meeting, etc)
-	
+
 		tweet = "RT @%s: %s" % (user, statusMsgText) # Setup our complete tweet string
 		twmeatit(tweet) # Send tweet string to twmeatit function for tweeting
 	else:
@@ -70,7 +97,10 @@ def meatme(searchList, statusMsg): #SearchList is a list (['the meeting', 'meeti
 def meatmentions(searchList):
 	'''This function will search twitter for our search text, and pass the dictionary results to meatme (text processing function)'''
 	writelog('Getting Twitter Search Results') # Log write
-	meatme(searchList, twitter.search(q='"' + searchList[0] + '"')) # This searches twitter for the first term in our list (should be search text) wrapped in ""'s. Returns a dictionary of results, then passes that dict to meatme funct
+	if getCheatmode():
+		cheatMode(searchList, twitter.search(q='"' + searchList[0] + '"', count=config.RESULT_COUNT))
+	else:
+		randomStatus(searchList, twitter.search(q='"' + searchList[0] + '"', count=config.RESULT_COUNT)) # This searches twitter for the first term in our list (should be search text) wrapped in ""'s. Returns a dictionary of results, then passes that dict to meatme funct
 
 def readfile(infile):
 	'''This is step one: Return a list of search terms out of the search text in-file'''
@@ -97,10 +127,10 @@ pastposts = config.POSTSPAST # Get postsPast file location from config file
 
 
 #-------------------Need to init your twitter oauth----------------------------------
-consumer_key = config.CONSUMER_KEY # Get Consumer Key from config file 
-consumer_secret = config.CONSUMER_SECRET # Get Consumer Secret from config file 
-access_token_key = config.ACCESS_TOKEN_KEY # Get Access Token Key from config file 
-access_token_secret = config.ACCESS_TOKEN_SECRET # Get Access Token Secret from config file 
+consumer_key = config.CONSUMER_KEY # Get Consumer Key from config file
+consumer_secret = config.CONSUMER_SECRET # Get Consumer Secret from config file
+access_token_key = config.ACCESS_TOKEN_KEY # Get Access Token Key from config file
+access_token_secret = config.ACCESS_TOKEN_SECRET # Get Access Token Secret from config file
 twitter = Twython(consumer_key, consumer_secret, access_token_key, access_token_secret)  # This authorize our bot, and will be our interface into the Twython functions
 #-------------------Need to init your twitter oauth----------------------------------
 
