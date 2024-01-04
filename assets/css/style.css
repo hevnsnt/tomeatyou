@@ -349,11 +349,6 @@ h6 {
   padding: 0;
 }
 
-#hero .carousel-container p::before {
-  content: '\2764'; /* Unicode character for the heart */
-  color: red;
-  display: inline-block;
-  margin-right: 5px; /* Adjust as needed */
   
 #hero .carousel-container {
   display: flex;
