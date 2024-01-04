@@ -94,16 +94,6 @@ h6 {
   background: rgba(42, 44, 57, 0.9);
 }
 
-#header .container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Align items to the start (left) */
-}
-
-#header .logo {
-  order: 1; /* Move the logo to the left */
-}
-
 #header .logo h1 {
   font-size: 28px;
   margin: 0;
