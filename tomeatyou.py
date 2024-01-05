@@ -28,7 +28,7 @@ def cheatMode(searchList, statusMsg):
 			user = status['user']['screen_name']
 			highest = int(status['user']['followers_count'])
 			statusMsgText = status['text']
-	writelog("%s with %s followers was the most popular and said: %s" % (user, highest, statusMsgText))
+	writelog(f"{user} with {highest} followers was the most popular and said: {statusMsgText}")
 	meatme(searchList, statusMsgText, user)
 
 
@@ -39,7 +39,7 @@ def postsPast(message):
 		writelog("######### Duplicate message found, restarting search #########") # Log write
 		return True # Return that it was true that we found a match
 	else:
-		writelog("Message not found, writing to %s and continuing" % pastposts) # Log write
+		writelog(f"Message not found, writing to {pastposts} and continuing") # Log write
 		if not testMode:
 			pastpostsWriter = open(pastposts, 'a')
 			pastpostsWriter.write(message.encode('ascii', 'ignore') + "\n")
@@ -61,11 +61,11 @@ def twmeatit(tweet):
 	chars, then checks to see if we are in Test Mode, and if passed both will tweet'''
 	if len(tweet) <= 140: # Make sure the full text we intend to tweet is less than 140 chars (including the RT: + Username + Message)
 		try:
-			writelog("Getting ready to tweet: %s" % tweet) # Write to the logfile
+			writelog(f'Getting ready to tweet: {tweet}') # Write to the logfile
 			if not testMode:twitter.update_status(status=tweet) # Check to see if we are in test mode, and if not send the tweet
-			writelog('Successfully Tweeted: %s' % tweet) # We know it was successful, because if there was an error, it would have been caught below
+			writelog(f'Successfully Tweeted: {tweet}') # We know it was successful, because if there was an error, it would have been caught below
 		except Exception, e: # If we fail sending to twitter for any reason, catch the exception here, store error message in variable 'e'
-			raise NameError('Something went wrong with tweet, error %s' % e) # Write to the log with the error message
+			raise NameError(f'Something went wrong with tweet, error {e}') # Write to the log with the error message
 	else:
 		raise NameError('Chosen tweet was > 140 Chars, choosing another one...') # Throw error, Log write, & restart
 
@@ -80,12 +80,12 @@ def randomStatus(searchList, statusMsg): #SearchList is a list (['the meeting', 
 def meatme(searchList, statusMsgText, user): # StatusMsgText is the chosen status text, and user is the one who said it
 	if postsPast(statusMsgText) == False:
 		if searchList[1] not in statusMsgText and "meet" not in statusMsgText: # As twitter search is case in-sensitve, this is a bug fix to handle the case bug (MEET != meet)
-			raise NameError('Search terms not found in: %s, Choosing another: ' % statusMsgText) # Throw error, Log write, & restart
+			raise NameError(f'Search terms not found in: {statusMsgText}, Choosing another: ') # Throw error, Log write, & restart
 		elif searchList[1] in statusMsgText:
-			writelog('Replacing %s with "%s" in text: %s' % (searchList[1], searchList[2], statusMsgText)) # Log write
+			writelog(f'Replacing {searchList[1]} with {searchList[2]} in text: {statusMsgText}') # Log write
 			statusMsgText = statusMsgText.replace(searchList[1], '"' + searchList[2] + '"') # Replace the user specified text in the tweet text
 		if "meet" in statusMsgText:
-			writelog('Replacing meet with meat in text: %s' % statusMsgText) # Log write
+			writelog(f'Replacing meet with meat in text: {statusMsgText}') # Log write
 			statusMsgText = statusMsgText.replace('meet', '"meat"') # Replace 'meet' with 'meat' in the tweet text (will cover meeting, etc)
 
 		tweet = "RT @%s: %s" % (user, statusMsgText) # Setup our complete tweet string
@@ -150,4 +150,4 @@ except NameError, e: # Catches any named exceptions
 	writelog('Error: %s' % e) # Log write (with error message in log)
 	meatmentions(readfile(infile)) # Since something went wrong; Restart the entire process and choose a completely new tweet
 except IOError:
-   print "Error: can\'t find file or read data"
+   print("Error: can\'t find file or read data")
