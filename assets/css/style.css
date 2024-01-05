@@ -496,6 +496,11 @@ section {
   padding-bottom: 40px;
 }
 
+/* Add this CSS to your stylesheet */
+.col-lg-6 img {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adjust values as needed */
+}
+
 .section-title h2 {
   font-size: 14px;
   font-weight: 500;
