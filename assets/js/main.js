@@ -92,6 +92,9 @@ if (selectHeader && selectLogo) {
     }
   };
 
+  // Call headerScrolled once when the page is loaded
+  headerScrolled();
+
   window.addEventListener('load', headerScrolled);
   onscroll(document, headerScrolled);
 }
