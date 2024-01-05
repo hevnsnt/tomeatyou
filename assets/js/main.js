@@ -75,21 +75,26 @@
     })
   }
 
-  /**
-   * Toggle .header-scrolled class to #header when page is scrolled
-   */
-  let selectHeader = select('#header')
-  if (selectHeader) {
-    const headerScrolled = () => {
-      if (window.scrollY > 100) {
-        selectHeader.classList.add('header-scrolled')
-      } else {
-        selectHeader.classList.remove('header-scrolled')
-      }
+/**
+ * Toggle .header-scrolled class to #header when page is scrolled
+ */
+let selectHeader = select('#header');
+let selectLogo = select('.logo'); // Assuming your logo has a class 'logo'
+
+if (selectHeader && selectLogo) {
+  const headerScrolled = () => {
+    if (window.scrollY > 100) {
+      selectHeader.classList.add('header-scrolled');
+      selectLogo.classList.remove('hidden-logo');
+    } else {
+      selectHeader.classList.remove('header-scrolled');
+      selectLogo.classList.add('hidden-logo');
     }
-    window.addEventListener('load', headerScrolled)
-    onscroll(document, headerScrolled)
-  }
+  };
+
+  window.addEventListener('load', headerScrolled);
+  onscroll(document, headerScrolled);
+}
 
   /**
    * Back to top button
