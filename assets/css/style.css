@@ -752,7 +752,7 @@ section {
 
 .services .icon {
   position: absolute;
-  left: 0px;
+  left: 5px;
   top: calc(50% - 30px);
 }
 
