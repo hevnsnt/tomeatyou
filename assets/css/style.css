@@ -1442,6 +1442,27 @@ section {
   padding: 10px 12px;
 }
 
+/* Add this CSS to your stylesheet */
+.btn-contact {
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 50px;
+  transition: 0.5s;
+  margin: 20px 0;
+  color: #fff;
+  background: #ef6603;
+  text-decoration: none;
+}
+
+.btn-contact:hover {
+  background: #fc8129;
+}
+
+
 .contact .php-email-form button[type=submit] {
   background: #ef6603;
   border: 0;
