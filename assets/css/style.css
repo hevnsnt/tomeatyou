@@ -1460,7 +1460,9 @@ section {
 
 .btn-contact:hover {
   background: #fc8129;
+  color: #fff; /* Add this line to ensure the text color remains white on hover */
 }
+
 
 
 .contact .php-email-form button[type=submit] {
