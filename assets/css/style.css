@@ -677,6 +677,9 @@ section {
 .features .tab-pane p:last-child {
   margin-bottom: 0;
 }
+.spacer {
+    height: 30px; /* Adjust the height as needed */
+}
 
 /*--------------------------------------------------------------
 # Cta
