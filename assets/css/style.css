@@ -682,7 +682,8 @@ section {
 }
 
 .gfm-card {
-  max-height: 300px;
+    max-height: 300px;
+    overflow: hidden; /* Ensure that content exceeding the height is hidden */
 }
 
 
