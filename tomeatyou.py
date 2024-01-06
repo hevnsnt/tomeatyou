@@ -10,6 +10,7 @@ from os import system, name # Needed to clear the screen for any OS
 
 #-------------------Functions----------------------------------------
 def getCheatmode():
+	'''Cheat mode looks for the user with the most followers in the pool of tweets retreived'''
 	if config.CHEATMODE == "random":
 		cheats = random.choice([True, False]) # Randomly return True or False
 	elif config.CHEATMODE == "enabled":
@@ -64,7 +65,7 @@ def twmeatit(tweet):
 			writelog(f'Getting ready to tweet: {tweet}') # Write to the logfile
 			if not testMode:twitter.update_status(status=tweet) # Check to see if we are in test mode, and if not send the tweet
 			writelog(f'Successfully Tweeted: {tweet}') # We know it was successful, because if there was an error, it would have been caught below
-		except Exception, e: # If we fail sending to twitter for any reason, catch the exception here, store error message in variable 'e'
+		except Exception as e: # If we fail sending to twitter for any reason, catch the exception here, store error message in variable 'e'
 			raise NameError(f'Something went wrong with tweet, error {e}') # Write to the log with the error message
 	else:
 		raise NameError('Chosen tweet was > 140 Chars, choosing another one...') # Throw error, Log write, & restart
@@ -88,7 +89,7 @@ def meatme(searchList, statusMsgText, user): # StatusMsgText is the chosen statu
 			writelog(f'Replacing meet with meat in text: {statusMsgText}') # Log write
 			statusMsgText = statusMsgText.replace('meet', '"meat"') # Replace 'meet' with 'meat' in the tweet text (will cover meeting, etc)
 
-		tweet = "RT @%s: %s" % (user, statusMsgText) # Setup our complete tweet string
+		tweet = f"RT @{user}: {statusMsgText}" # Setup our complete tweet string
 		twmeatit(tweet) # Send tweet string to twmeatit function for tweeting
 	else:
 		raise NameError('Previously posted this particular tweet')
@@ -105,7 +106,7 @@ def meatmentions(searchList):
 
 def readfile(infile):
 	'''This is step one: Return a list of search terms out of the search text in-file'''
-	writelog('Reading %s as input' % infile) # Log write
+	writelog(f'Reading {infile} as input') # Log write
 	data = filter(bool, [line.strip() for line in open(infile, 'r')]) # This reads the file in line by line into a list, stripping blank lines
 	randInt = random.randrange(0, len(data),1) # This gets a random integer that ranges from 0 to the number of lines in the text
 	return data[randInt].split(':') # Data is a list of search terms, this chooses a random one from that list, splits it by the ':' char, and returns a single search term as a list.
@@ -143,11 +144,12 @@ if testMode:writelog('####################### Test Mode Detected, I will not twe
 
 try:
 	meatmentions(readfile(infile)) # This initiates the main program, with the chosen search term returned from readfile() (search term example: ['the meeting', 'meeting', 'meating'] )
-except Exception, e: # Catches any main exceptions
-	writelog('Error: %s' % e) # Log write (with error message in log)
-	meatmentions(readfile(infile)) # Since something went wrong; Restart the entire process and choose a completely new tweet
-except NameError, e: # Catches any named exceptions
-	writelog('Error: %s' % e) # Log write (with error message in log)
+except NameError as e: # Catches any named exceptions
+	writelog(f'Error: {e}') # Log write (with error message in log)
 	meatmentions(readfile(infile)) # Since something went wrong; Restart the entire process and choose a completely new tweet
 except IOError:
    print("Error: can\'t find file or read data")
+except Exception as e: # Catches any main exceptions
+	writelog(f'Error: {e}' ) # Log write (with error message in log)
+finally:
+    meatmentions(readfile(infile)) # Since something went wrong; Restart the entire process and choose a completely new tweet
