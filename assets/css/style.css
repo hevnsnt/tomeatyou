@@ -502,7 +502,7 @@ section {
 }
 
 .gfm-embed {
-  display: inline-block;
+  height: 100px;
 }
 
 .section-title h2 {
